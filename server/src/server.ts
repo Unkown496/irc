@@ -9,6 +9,7 @@ import { logger, loggerHttp } from 'lib/logger';
 import { buildPath } from 'utils/path.utils';
 import useCors from 'lib/cors';
 import cors from 'config/cors';
+import Responser from '@responser';
 
 /**
  * @description Сделан синглтоном, чтобы избежать пересоздания, экземпляр должен быть только один
@@ -56,6 +57,25 @@ export class Server {
     this.http.use(express.json());
   }
 
+  private useResponser() {
+    this.http.use(async (_, res, next) => {
+      const responser = new Responser(res);
+
+      for (const responserKey of responser.keys()) {
+        const action = responser[responserKey];
+
+        if (typeof action === 'function')
+          Reflect.defineProperty(res, responserKey, {
+            writable: true,
+            enumerable: true,
+            value: (action as Function).bind(responser),
+          });
+      }
+
+      return next();
+    });
+  }
+
   private useGlobalPath(path: string) {
     return '/' + buildPath(this.config.server.apiPrefix, path);
   }
@@ -93,6 +113,8 @@ export class Server {
     this.useLogger();
     this.useCors();
     this.useJson();
+
+    this.useResponser();
 
     this.useRoutes();
 
