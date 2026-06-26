@@ -1,5 +1,5 @@
 import { type Response } from 'express';
-import Department from '../models/department.model';
+import Department from 'models/department.model';
 import { RequestWithValidation } from 'types/express.types';
 import {
   BodySchemas,
@@ -27,10 +27,10 @@ export type RequestDeleteDepartments = RequestWithValidation<
   typeof ParamsSchemas.delete
 >;
 
-export default class DepartmentController {
+export class DepartmentController {
   private readonly departmentRepo = new Department();
 
-  public async get(req: RequestGetDepartments, res: Response) {
+  async get(req: RequestGetDepartments, res: Response) {
     let filter = { page: 1, limit: 10 };
 
     if (req.validatedQuery)
@@ -49,7 +49,7 @@ export default class DepartmentController {
     return res.pagination(data, meta);
   }
 
-  public async create(req: RequestCreateDepartments, res: Response) {
+  async create(req: RequestCreateDepartments, res: Response) {
     const { validatedBody } = req;
 
     if (!validatedBody) return res.error();
@@ -59,7 +59,7 @@ export default class DepartmentController {
     return res.created(createdDepartment);
   }
 
-  public async edit(
+  async edit(
     { validatedParams, validatedBody }: RequestEditDepartments,
     res: Response,
   ) {
@@ -76,10 +76,7 @@ export default class DepartmentController {
     return res.ok(editDepartment);
   }
 
-  public async delete(
-    { validatedParams }: RequestDeleteDepartments,
-    res: Response,
-  ) {
+  async delete({ validatedParams }: RequestDeleteDepartments, res: Response) {
     if (!validatedParams) return res.error();
 
     const isDeleted = await this.departmentRepo.delete(validatedParams.id);
