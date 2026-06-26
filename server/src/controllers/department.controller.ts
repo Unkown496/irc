@@ -84,8 +84,6 @@ export default class DepartmentController {
 
     const isDeleted = await this.departmentRepo.delete(validatedParams.id);
 
-    console.log({ isDeleted });
-
     return isDeleted ? res.deleted() : res.notFound();
   }
 }
