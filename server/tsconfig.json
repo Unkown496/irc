@@ -3,6 +3,7 @@
     "module": "nodenext",
     "moduleResolution": "nodenext",
     "removeComments": true,
+    "strict": true,
     "target": "es2025",
     "rootDir": ".",
     "outDir": "dist",
@@ -17,17 +18,21 @@
     "resolvePackageJsonExports": true,
     "esModuleInterop": true,
     "isolatedModules": true,
-    "types": ["node", "express", "./env.d.ts"],
+    "types": ["@types/node", "@types/express", "./env.d.ts", "./express.d.ts"],
     "paths": {
       "config/*": ["./src/config/*"],
       "lib/*": ["./src/lib/*"],
       "controllers/*": ["./src/controllers/*"],
       "routes/*": ["./src/routes/*"],
       "utils/*": ["./src/utils/*"],
-      "@orm": ["./src/orm.ts"]
+      "types/*": ["./src/types/*"],
+      "schemas/*": ["./src/schemas/*"],
+
+      "@orm": ["./src/orm.ts"],
+      "@responser": ["./src/responser.ts"]
     }
   },
   "ts-node": { "require": ["tsconfig-paths/register"] },
-  "include": ["**/*.ts", "env.d.ts"],
+  "include": ["**/*.ts", "env.d.ts", "express.d.ts"],
   "exclude": ["node_modules", "dist"]
 }
