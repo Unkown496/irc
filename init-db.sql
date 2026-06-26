@@ -1,6 +1,6 @@
-CREATE DATABASE company;
+CREATE DATABASE irc;
 
-\c company;
+\c irc;
 
 -- Таблица отделов (главная)
 CREATE TABLE departments (
