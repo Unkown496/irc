@@ -27,7 +27,7 @@ class Department
   declare public established_date: Date | null;
 
   public async findAll(page: number = 1, limit: number = 10) {
-    const total = await count(Department.tableName);
+    const total = await Department.count();
 
     const { limit: limitPagination, offset } = getPagination(
       page,

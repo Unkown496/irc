@@ -1,18 +1,5 @@
-import orm from '@orm';
-import { Model, QueryTypes } from 'sequelize';
+import { Model } from 'sequelize';
 import type { Attributes } from 'types/orm.types';
-
-export const count = async (tableName: string) => {
-  const escapedTableName = tableName.toString();
-
-  const query = `SELECT COUNT(*) FROM "${escapedTableName}"`;
-
-  const [countQuery] = await orm.query<{ count: string }>(query, {
-    type: QueryTypes.SELECT,
-  });
-
-  return Number(countQuery.count || 0);
-};
 
 export const getPagination = (page: number, limit: number, total: number) => {
   if (limit > total) return { limit: total, offset: 0 };
