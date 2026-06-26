@@ -27,6 +27,7 @@
       "utils/*": ["./src/utils/*"],
       "types/*": ["./src/types/*"],
       "schemas/*": ["./src/schemas/*"],
+      "models/*": ["./src/models/*"],
 
       "@orm": ["./src/orm.ts"],
       "@responser": ["./src/responser.ts"]
