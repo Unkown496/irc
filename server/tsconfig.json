@@ -23,7 +23,8 @@
       "lib/*": ["./src/lib/*"],
       "controllers/*": ["./src/controllers/*"],
       "routes/*": ["./src/routes/*"],
-      "utils/*": ["./src/utils/*"]
+      "utils/*": ["./src/utils/*"],
+      "@orm": ["./src/orm.ts"]
     }
   },
   "ts-node": { "require": ["tsconfig-paths/register"] },
