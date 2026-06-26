@@ -1,0 +1,91 @@
+import { type Response } from 'express';
+import Department from '../models/department.model';
+import { RequestWithValidation } from 'types/express.types';
+import {
+  BodySchemas,
+  ParamsSchemas,
+  QuerySchemas,
+} from 'schemas/department.schemas';
+
+export type RequestGetDepartments = RequestWithValidation<
+  any,
+  any,
+  typeof QuerySchemas.get
+>;
+
+export type RequestCreateDepartments = RequestWithValidation<
+  typeof BodySchemas.create
+>;
+
+export type RequestEditDepartments = RequestWithValidation<
+  typeof BodySchemas.edit,
+  typeof ParamsSchemas.edit
+>;
+
+export type RequestDeleteDepartments = RequestWithValidation<
+  any,
+  typeof ParamsSchemas.delete
+>;
+
+export default class DepartmentController {
+  private readonly departmentRepo = new Department();
+
+  public async get(req: RequestGetDepartments, res: Response) {
+    let filter = { page: 1, limit: 10 };
+
+    if (req.validatedQuery)
+      filter = {
+        page: req.validatedQuery?.page ?? 1,
+        limit: req.validatedQuery?.limit ?? 10,
+      };
+
+    const { data, meta } = await this.departmentRepo.findAll(
+      filter.page,
+      filter.limit,
+    );
+
+    if (filter.page > meta.totalPages) res.notFound();
+
+    return res.pagination(data, meta);
+  }
+
+  public async create(req: RequestCreateDepartments, res: Response) {
+    const { validatedBody } = req;
+
+    if (!validatedBody) return res.error();
+
+    const createdDepartment = await this.departmentRepo.create(validatedBody);
+
+    return res.created(createdDepartment);
+  }
+
+  public async edit(
+    { validatedParams, validatedBody }: RequestEditDepartments,
+    res: Response,
+  ) {
+    if (!validatedParams) return res.error();
+    if (!validatedBody) return res.error();
+
+    const editDepartment = await this.departmentRepo.edit(
+      validatedParams.id,
+      validatedBody,
+    );
+
+    if (!editDepartment) return res.notFound();
+
+    return res.ok(editDepartment);
+  }
+
+  public async delete(
+    { validatedParams }: RequestDeleteDepartments,
+    res: Response,
+  ) {
+    if (!validatedParams) return res.error();
+
+    const isDeleted = await this.departmentRepo.delete(validatedParams.id);
+
+    console.log({ isDeleted });
+
+    return isDeleted ? res.deleted() : res.notFound();
+  }
+}
