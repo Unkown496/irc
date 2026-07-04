@@ -6,6 +6,8 @@ import {
   ParamsSchemas,
   QuerySchemas,
 } from 'schemas/department.schemas';
+import { BadRequestError } from 'errors/bad-request.error';
+import { NotFoundError } from 'errors/not-found.error';
 
 export type RequestGetDepartments = RequestWithValidation<
   any,
@@ -25,6 +27,11 @@ export type RequestEditDepartments = RequestWithValidation<
 export type RequestDeleteDepartments = RequestWithValidation<
   any,
   typeof ParamsSchemas.delete
+>;
+
+export type RequestGetCurrentDepartments = RequestWithValidation<
+  any,
+  typeof ParamsSchemas.getCurrent
 >;
 
 export class DepartmentController {
@@ -47,6 +54,19 @@ export class DepartmentController {
     if (filter.page > meta.totalPages) res.notFound();
 
     return res.pagination(data, meta);
+  }
+
+  async getCurrent(
+    { validatedParams }: RequestGetCurrentDepartments,
+    res: Response,
+  ) {
+    if (!validatedParams) throw new BadRequestError();
+
+    const departmentById = await Department.findByPk(validatedParams.id);
+
+    if (!departmentById) throw new NotFoundError();
+
+    return res.ok(departmentById);
   }
 
   async create(req: RequestCreateDepartments, res: Response) {

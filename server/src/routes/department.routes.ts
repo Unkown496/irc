@@ -21,6 +21,9 @@ router
 
 router
   .route('/:id')
+  .get(validateRequest({ params: ParamsSchemas.getCurrent }), (req, res) =>
+    controller.getCurrent(req, res),
+  )
   .patch(
     validateRequest({ body: BodySchemas.edit, params: ParamsSchemas.edit }),
     (req, res) => controller.edit(req, res),

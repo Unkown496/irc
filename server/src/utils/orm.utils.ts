@@ -8,7 +8,7 @@ export const getPagination = (page: number, limit: number, total: number) => {
     page: Math.max(1, page),
     limit: Math.max(1, limit),
   };
-  const offset = safeFilters.page - 1 * safeFilters.limit;
+  const offset = (safeFilters.page - 1) * safeFilters.limit;
 
   if (offset >= total) return { limit: 0, offset: total };
 

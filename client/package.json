@@ -10,12 +10,19 @@
   },
   "dependencies": {
     "@headlessui/react": "^2.1.9",
+    "@hookform/resolvers": "^5.4.0",
+    "ag-grid-community": "^36.0.0",
+    "ag-grid-react": "^36.0.0",
+    "axios": "^1.18.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.446.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.80.0",
     "react-router-dom": "^6.26.0",
-    "recharts": "^2.12.7"
+    "react-toastify": "^11.1.0",
+    "recharts": "^2.12.7",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",

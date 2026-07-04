@@ -1,6 +1,5 @@
 import { useMemo, ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, User, Settings } from 'lucide-react';
 
 import clsx from 'clsx';
 
@@ -44,7 +43,7 @@ function SidebarLinks({ items, activePath }: PropsLinks) {
 export default function Sidebar({
   items = [],
   isOpen = false,
-  setIsOpen = isOpen => {},
+  setIsOpen = _ => {},
 }: Props) {
   const location = useLocation();
   const activePath = useMemo(() => location.pathname, [location]);

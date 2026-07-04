@@ -18,6 +18,7 @@ export const BodySchemas = {
 };
 
 export const ParamsSchemas = {
+  getCurrent: createParamsIdSchema(),
   delete: createParamsIdSchema(),
   edit: createParamsIdSchema(),
 };

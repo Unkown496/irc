@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  [type='button'],
+  button {
+    @apply cursor-pointer;
+  }
+}

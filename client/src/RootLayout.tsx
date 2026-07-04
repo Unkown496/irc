@@ -8,7 +8,13 @@ import Header from './components/layout/Header';
 import useToggle from './hooks/useToggle';
 import { useLocation } from 'react-router-dom';
 
+import { AgGridProvider } from 'ag-grid-react';
+import { AllCommunityModule, ValidationModule } from 'ag-grid-community';
+import { ToastContainer } from 'react-toastify';
+
 interface Props extends PropsWithChildren {}
+
+const modules = [AllCommunityModule, ValidationModule];
 
 export default function RootLayout({ children }: Props) {
   const sidebarItems = links.map(
@@ -30,18 +36,21 @@ export default function RootLayout({ children }: Props) {
   );
 
   return (
-    <div className="flex">
-      <Sidebar
-        items={sidebarItems}
-        isOpen={isMenuOpen}
-        setIsOpen={setIsOpenMenu}
-      />
+    <AgGridProvider modules={modules}>
+      <div className="flex">
+        <Sidebar
+          items={sidebarItems}
+          isOpen={isMenuOpen}
+          setIsOpen={setIsOpenMenu}
+        />
 
-      <div className="md:ml-60 flex-1 w-full">
-        <Header onMenuClick={toggleMenu} title={title} />
+        <div className="md:ml-60 flex-1 w-full">
+          <Header onMenuClick={toggleMenu} title={title} />
 
-        <main>{children}</main>
+          <main>{children}</main>
+        </div>
       </div>
-    </div>
+      <ToastContainer />
+    </AgGridProvider>
   );
 }
