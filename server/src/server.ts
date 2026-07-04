@@ -4,12 +4,14 @@ import server from 'config/server';
 import express, { Router } from 'express';
 
 import departmentRouter from 'routes/department.routes';
+import employeeRouter from 'routes/employee.routes';
 
 import { logger, loggerHttp } from 'lib/logger';
 import { buildPath } from 'utils/path.utils';
 import useCors from 'lib/cors';
 import cors from 'config/cors';
 import Responser from '@responser';
+import useErrorCatcher from 'lib/error-handler';
 
 /**
  * @description Сделан синглтоном, чтобы избежать пересоздания, экземпляр должен быть только один
@@ -31,6 +33,7 @@ export class Server {
 
   private readonly routers = {
     departments: departmentRouter,
+    employee: employeeRouter,
   };
 
   private logger = logger;
@@ -97,6 +100,11 @@ export class Server {
     );
 
     this.useRouter(this.routers.departments, 'departments');
+    this.useRouter(this.routers.employee, 'employees');
+  }
+
+  private useGlobalErrorHandler() {
+    this.http.use(useErrorCatcher);
   }
 
   private listen() {
@@ -117,6 +125,8 @@ export class Server {
     this.useResponser();
 
     this.useRoutes();
+
+    this.useGlobalErrorHandler();
 
     this.listen();
   }

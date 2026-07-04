@@ -28,6 +28,7 @@
       "types/*": ["./src/types/*"],
       "schemas/*": ["./src/schemas/*"],
       "models/*": ["./src/models/*"],
+      "errors/*": ["./src/errors/*"],
 
       "@orm": ["./src/orm.ts"],
       "@responser": ["./src/responser.ts"]

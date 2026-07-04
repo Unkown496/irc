@@ -2,7 +2,7 @@ import orm from '@orm';
 import { BodySchemas } from 'schemas/department.schemas';
 import { DataTypes, Model, QueryTypes, type Optional } from 'sequelize';
 import { pagination } from 'utils/express.utils';
-import { count, getPagination, toDate, toFloat } from 'utils/orm.utils';
+import { getPagination, toDate, toFloat } from 'utils/orm.utils';
 import z from 'utils/zod.utils';
 
 export interface DepartmentAttributes {

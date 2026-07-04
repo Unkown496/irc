@@ -27,18 +27,18 @@ export default class Responser {
   }
 
   public error<T>(
-    stackTrace?: T,
     message?: string,
+    details?: T,
     statusCode: StatusCodes = 400,
   ) {
     return this.response.status(statusCode).json({
       ok: false,
       message,
-      ...(stackTrace ? { errors: stackTrace } : {}),
+      ...(details ? { errors: details } : {}),
     });
   }
 
-  public internalServer(message: string) {
+  public internalServer(message?: string) {
     return this.error('Internal Server Error', undefined, 500);
   }
   public notFound(message: string = 'Not Found') {
