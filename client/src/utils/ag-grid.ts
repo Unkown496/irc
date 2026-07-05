@@ -7,7 +7,7 @@ import { ID_COL_KEY } from 'constants/ag-grid';
 import { HTMLInputTypeAttribute } from 'react';
 
 export const toDate = <T extends ValueFormatterParams<any>>({ value }: T) =>
-  new Date(value).toLocaleDateString('ru-RU');
+  value === null ? 'Нет даты' : new Date(value).toLocaleDateString('ru-RU');
 
 export const toInputType = <D = any, V = any>(
   col: ColDef<D, V>,

@@ -51,7 +51,7 @@ export class DepartmentController {
       filter.limit,
     );
 
-    if (filter.page > meta.totalPages) res.notFound();
+    if (filter.page > meta.totalPages && data.length > 0) res.notFound();
 
     return res.pagination(data, meta);
   }

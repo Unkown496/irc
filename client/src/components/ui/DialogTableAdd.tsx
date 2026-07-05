@@ -57,6 +57,8 @@ export default function DialogTableAdd<T, S extends ZodObject>({
   });
 
   const onSubmit: SubmitHandler<FieldValues> = data => {
+    console.log({ data });
+
     onSubmitData(data as T);
     reset();
   };

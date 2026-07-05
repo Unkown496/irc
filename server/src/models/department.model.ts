@@ -67,7 +67,7 @@ class Department
       bind: {
         name: data.name,
         budget: data.budget ?? null,
-        established_date: data.establishedDate,
+        established_date: data.established_date ?? null,
       },
       type: QueryTypes.INSERT,
     });
@@ -92,7 +92,7 @@ class Department
         id,
         name: data?.name ?? null,
         budget: data?.budget ?? null,
-        established_date: data?.establishedDate ?? null,
+        established_date: data?.established_date ?? null,
       },
       type: QueryTypes.UPDATE,
     });

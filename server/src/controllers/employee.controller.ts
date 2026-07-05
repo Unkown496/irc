@@ -34,7 +34,7 @@ export class EmployeeController {
 
     const { data, meta } = await this.employeeRepo.findAll(page, limit);
 
-    if (page > meta.totalPages)
+    if (page > meta.totalPages && data.length > 0)
       throw new NotFoundError({
         message: 'Not found page',
       });

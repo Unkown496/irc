@@ -34,10 +34,11 @@ export default function FormFieldsByCols<T, D>({
 
   return (
     <>
-      {inputs.map(input => {
+      {inputs.map((input, i) => {
         return (
           <Input
             {...register(input.name)}
+            key={i}
             error={errors[input.name]?.message?.toString()}
             name={input.name}
             type={input.type}

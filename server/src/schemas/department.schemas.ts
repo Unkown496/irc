@@ -2,13 +2,11 @@ import z, { createParamsIdSchema } from 'utils/zod.utils';
 
 import { QuerySchema as PaginationQuerySchema } from './pagination.schemas';
 
-const DepartmentSchema = z
-  .object({
-    name: z.string(),
-    budget: z.optional(z.number()),
-    establishedDate: z.optional(z.coerce.date()),
-  })
-  .strict();
+const DepartmentSchema = z.object({
+  name: z.string(),
+  budget: z.optional(z.number()),
+  established_date: z.optional(z.coerce.date()),
+});
 
 export const QuerySchemas = {
   get: PaginationQuerySchema,
