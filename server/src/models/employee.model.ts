@@ -87,43 +87,56 @@ class Employee
         details: { department_id: 'not found' },
       });
 
-    return await Employee.create({
-      ...data,
-      hire_date: data.hire_date,
+    const query = `INSERT INTO "employees" ("id","name","salary","hire_date","department_id") VALUES (DEFAULT,$name,$salary,$hire_date,$department_id) RETURNING "id","name","salary","hire_date","department_id"`;
+
+    const [result] = await orm.query(query, {
+      instance: this,
+      mapToModel: true,
+      bind: {
+        ...data,
+      },
+      type: QueryTypes.INSERT,
     });
+
+    return result;
   }
 
   async edit(id: number, data: z.infer<typeof BodySchemas.edit>) {
-    const [affectedCount, [employee]] = await Employee.update(
-      {
-        ...data,
-        department_id: data.department_id,
-        hire_date: data.hire_date,
-      },
-      {
-        returning: true,
-        where: { id },
-        individualHooks: false,
-      },
-    );
+    const query = `UPDATE "employees" 
+    SET 
+      "name" = COALESCE($name, "name"),
+      "salary" = COALESCE($salary, "salary"),
+      "hire_date" = COALESCE($hire_date, "hire_date"),
+      "department_id" = COALESCE($department_id, "department_id") 
+    
+    WHERE "id" = $id 
+    
+    RETURNING "id","name","salary","hire_date","department_id"`;
 
-    if (affectedCount === 0)
-      throw new NotFoundError({
-        message: 'Employee by id not found!',
-      });
+    const [result, countUpdated] = await orm.query(query, {
+      mapToModel: true,
+      instance: this,
+      bind: {
+        id,
+        name: data?.name ?? null,
+        salary: data?.salary ?? null,
+        hire_date: data?.hire_date ?? null,
+        department_id: data?.department_id ?? null,
+      },
+      type: QueryTypes.UPDATE,
+    });
 
-    return employee;
+    if (countUpdated === 0) return;
+
+    return result;
   }
 
   async delete(id: number) {
-    const deleteCount = await Employee.destroy({
-      where: { id },
-    });
+    const query = `DELETE FROM "employees" WHERE "id" = $id`;
 
-    if (!deleteCount)
-      throw new NotFoundError({ message: 'Employee by id not found!' });
+    const [_, meta] = await orm.query(query, { bind: { id } });
 
-    return;
+    return (meta as { rowCount: number }).rowCount > 0;
   }
 }
 

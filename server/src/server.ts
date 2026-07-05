@@ -12,6 +12,7 @@ import useCors from 'lib/cors';
 import cors from 'config/cors';
 import Responser from '@responser';
 import useErrorCatcher from 'lib/error-handler';
+import { GlobalConfig } from 'types/express.types';
 
 /**
  * @description Сделан синглтоном, чтобы избежать пересоздания, экземпляр должен быть только один
@@ -107,6 +108,10 @@ export class Server {
     this.http.use(useErrorCatcher);
   }
 
+  private applyGlobalConfig() {
+    this.http.set(GlobalConfig.GlobalPrefix, this.config.server.apiPrefix);
+  }
+
   private listen() {
     this.http.listen(this.config.server.port, err => {
       if (err) return this.logger.error(err);
@@ -118,6 +123,8 @@ export class Server {
   }
 
   async bootstrap() {
+    this.applyGlobalConfig();
+
     this.useLogger();
     this.useCors();
     this.useJson();

@@ -2,6 +2,8 @@ import type { NextFunction, Request, Response } from 'express';
 import { RequestSchema, RequestWithValidation } from 'types/express.types';
 import { ZodAny, ZodError, ZodType } from 'zod';
 import z from 'utils/zod.utils';
+import { BadRequestError } from 'errors/bad-request.error';
+import { InternalServerError } from 'errors/internal-server.error';
 
 type ZodInfer<T extends ZodType> = z.infer<T>;
 
@@ -14,7 +16,7 @@ export const validateRequest = <
 ) => {
   return async (
     req: RequestWithValidation<Body, Params, Query>,
-    res: Response,
+    _: Response,
     next: NextFunction,
   ) => {
     try {
@@ -36,11 +38,11 @@ export const validateRequest = <
 
       if (err instanceof ZodError)
         // @ts-ignore
-        return res.error(z.treeifyError(err as ZodError<any>));
+        throw new BadRequestError({
+          details: z.treeifyError(err as ZodError<any>).errors,
+        });
 
-      res.internalServer('Validator Error');
-
-      return next(err);
+      throw new InternalServerError();
     }
   };
 };

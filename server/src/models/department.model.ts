@@ -35,7 +35,7 @@ class Department
       total,
     );
 
-    const data = await this.sequelize.query<Department>(
+    const data = await orm.query<Department>(
       `
         SELECT id, name, budget, established_date
         FROM departments
@@ -59,34 +59,58 @@ class Department
   }
 
   public async create(data: z.infer<typeof BodySchemas.create>) {
-    return Department.create({
-      ...data,
-      established_date: data?.establishedDate,
+    const query = `INSERT INTO "departments" ("id","name","budget","established_date") VALUES (DEFAULT,$name,$budget,$established_date) RETURNING "id","name","budget","established_date"`;
+
+    const [result] = await orm.query(query, {
+      mapToModel: true,
+      instance: this,
+      bind: {
+        name: data.name,
+        budget: data.budget ?? null,
+        established_date: data.establishedDate,
+      },
+      type: QueryTypes.INSERT,
     });
+
+    return result;
   }
 
   public async edit(id: number, data: z.infer<typeof BodySchemas.edit>) {
-    const [affectedCount, [department]] = await Department.update(
-      {
-        ...data,
-        established_date: data.establishedDate,
+    const query = `
+    UPDATE "departments" 
+    SET 
+      "name" = COALESCE($name, "name"),
+      "budget" = COALESCE($budget, "budget"),
+      "established_date" = COALESCE($established_date, "established_date")
+    WHERE "id" = $id 
+    RETURNING "id","name","budget","established_date"`;
+
+    const [result, countUpdated] = await this.sequelize.query(query, {
+      instance: this,
+      mapToModel: true,
+      bind: {
+        id,
+        name: data?.name ?? null,
+        budget: data?.budget ?? null,
+        established_date: data?.establishedDate ?? null,
       },
-      { returning: true, where: { id }, individualHooks: false },
-    );
+      type: QueryTypes.UPDATE,
+    });
 
-    if (affectedCount === 0) return;
+    if (countUpdated === 0) return;
 
-    return department;
+    return result;
   }
 
   public async delete(id: number) {
-    const deleteCount = await Department.destroy({
-      where: { id },
-    });
+    const [_, meta] = await orm.query(
+      `DELETE FROM "departments" WHERE "id" = $id`,
+      {
+        bind: { id },
+      },
+    );
 
-    if (deleteCount === 0) return false;
-
-    return true;
+    return (meta as { rowCount: number }).rowCount > 0;
   }
 }
 

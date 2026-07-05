@@ -23,3 +23,7 @@ export type RequestWithValidation<
     validatedParams: z.infer<Params>;
     validatedQuery: z.infer<Query>;
   }>;
+
+export enum GlobalConfig {
+  GlobalPrefix = 'globalPrefix',
+}

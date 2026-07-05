@@ -75,8 +75,8 @@ export class EmployeeController {
     if (!validatedParams)
       throw new BadRequestError({ message: 'Params id is required' });
 
-    await this.employeeRepo.delete(validatedParams.id);
+    const isDeleted = await this.employeeRepo.delete(validatedParams.id);
 
-    return res.deleted();
+    return isDeleted ? res.deleted() : res.notFound();
   }
 }
